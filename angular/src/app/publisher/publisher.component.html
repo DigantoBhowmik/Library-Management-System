@@ -1,0 +1,45 @@
+<button type="button"  class="btn btn-primary float-right" style="margin-bottom: 20px;" (click)="createpublisher()">Add publisher</button>
+<table class="table" >
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+         <th></th>
+         <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of publisher.items?.reverse()">
+        <td scope="row">{{item.name}}</td>
+        <td><button type="button" class="btn btn-primary float-right" style="margin-bottom: 20px;" (click)="editpublisher(item.id)">Edit</button></td>
+        <td><button type="button" class="btn btn-danger float-right" style="margin-bottom: 20px;" (click)="delete(item.id)">Delete</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+  <abp-modal [(visible)]="isModalOpen">
+    <ng-template #abpHeader>
+        <h3>{{ (selectedpublisher.id ? '::Edit' : '::Newpublisher') | abpLocalization }}</h3>
+      </ng-template>
+      
+      <ng-template #abpBody>
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <div class="form-group">
+            <label for="publisher-name">Name</label><span> * </span>
+            <input type="text" id="publisher-name" class="form-control" formControlName="name" autofocus />
+          </div>
+    
+          
+        </form>
+      </ng-template>
+    
+      <ng-template #abpFooter>
+        <button type="button" class="btn btn-secondary" abpClose>
+          {{ '::Close' | abpLocalization }}
+        </button>
+    
+        <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
+          <i class="fa fa-check mr-1"></i>
+          {{ '::Save' | abpLocalization }}
+        </button>
+      </ng-template>
+  </abp-modal>

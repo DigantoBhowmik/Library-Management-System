@@ -1,0 +1,64 @@
+<button type="button"  class="btn btn-primary float-right" style="margin-bottom: 20px;" (click)="createAuthor()">Add Author</button>
+<table class="table" >
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Date of Bath</th>
+        <th scope="col">Short Bio</th>
+         <th></th>
+         <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of author.items?.reverse()">
+        <td scope="row">{{item.name}}</td>
+        <td>{{item.birthDate | date}}</td>
+        <td>{{item.shortBio}}</td>
+        <td><button type="button" class="btn btn-primary float-right" style="margin-bottom: 20px;" (click)="editAuthor(item.id)">Edit</button></td>
+        <td><button type="button" class="btn btn-danger float-right" style="margin-bottom: 20px;" (click)="delete(item.id)">Delete</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+  <abp-modal [(visible)]="isModalOpen">
+    <ng-template #abpHeader>
+        <h3>{{ (selectedAuthor.id ? '::Edit' : '::NewAuthor') | abpLocalization }}</h3>
+      </ng-template>
+    
+      <ng-template #abpBody>
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <div class="form-group">
+            <label for="author-name">Name</label><span> * </span>
+            <input type="text" id="author-name" class="form-control" formControlName="name" autofocus />
+          </div>
+    
+          <div class="form-group">
+            <label>Birth date</label><span> * </span>
+            <input
+              #datepicker="ngbDatepicker"
+              class="form-control"
+              name="datepicker"
+              formControlName="birthDate"
+              ngbDatepicker
+              (click)="datepicker.toggle()"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="author-bio">Short Bio</label><span> * </span>
+            <input type="text" id="author-bio" class="form-control" formControlName="shortBio" autofocus />
+          </div>
+        </form>
+      </ng-template>
+    
+      <ng-template #abpFooter>
+        <button type="button" class="btn btn-secondary" abpClose>
+          {{ '::Close' | abpLocalization }}
+        </button>
+    
+        <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
+          <i class="fa fa-check mr-1"></i>
+          {{ '::Save' | abpLocalization }}
+        </button>
+      </ng-template>
+  </abp-modal>

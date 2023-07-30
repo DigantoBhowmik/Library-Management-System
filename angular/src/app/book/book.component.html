@@ -1,0 +1,113 @@
+<button type="button" *abpPermission="'Diganto.Books.Create'" class="btn btn-primary float-right" style="margin-bottom: 20px;" (click)="createBook()">Add Book</button>
+<table class="table" >
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Publish Date</th>
+        <th scope="col">Price</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">Publisher Name</th>
+         <th></th>
+         <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of book.items?.reverse()" >
+        <td scope="row">{{item.name}}</td>
+        <td> {{ '::Enum:BookType:' + item.type | abpLocalization }}</td>
+        <td>{{item.publishDate | date}}</td>
+        <td>{{item.price}}</td>
+        <button class="btn btn-success " style="margin-bottom: 10px;" (click)="seeAuthor(item.id)">See Author</button>
+        <td>{{item.publisherName}}</td>
+        <td><button type="button" *abpPermission="'Diganto.Books.Edit'" class="btn btn-primary float-right" style="margin-bottom: 20px;" (click)="editBook(item.id)">Edit</button></td>
+        <td><button type="button" *abpPermission="'Diganto.Books.Delete'" class="btn btn-danger float-right" style="margin-bottom: 20px;" (click)="delete(item.id)">Delete</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+  <abp-modal [(visible)]="isAModalOpen">
+    <ng-template #abpHeader>
+      <h3>Author Name</h3>
+    </ng-template>
+    <ng-template #abpBody>
+      <div *ngFor="let item1 of bwa">
+        <p>{{item1.authorName}}</p>
+      </div>
+    </ng-template>
+    
+  </abp-modal>
+  <abp-modal [(visible)]="isModalOpen">
+    <ng-template #abpHeader>
+      <h3>{{ '::NewBook' | abpLocalization }}</h3>
+    </ng-template>
+    <ng-template #abpBody> 
+        <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="form-group">
+              <label for="book-name">Name</label><span> * </span>
+              <input type="text" id="book-name" class="form-control" formControlName="name" autofocus />
+            </div>
+        
+            <div class="form-group">
+              <label for="book-price">Price</label><span> * </span>
+              <input type="number" id="book-price" class="form-control" formControlName="price" />
+            </div>
+        
+            <div class="form-group">
+              <label for="book-type">Type</label><span> * </span>
+              <select class="form-control" id="book-type" formControlName="type">
+                <option [ngValue]="null">Select a book type</option>
+                <option [ngValue]="type.value" *ngFor="let type of bookTypes"> {{ type.key }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              
+              <label for="book-type">Author Name</label><span> * </span>
+              <!-- <div *ngFor="let author of bwa" >
+                {{author.authorName}}
+              </div> -->
+              <ng-select [items]="author.items"
+                   bindLabel=name
+                   placeholder="Select Author"
+                   bindValue="id" 
+                   [multiple]="true"
+                   formControlName="authors">
+              </ng-select>
+              
+            </div>
+            <div class="form-group">
+              <label for="book-type">Publisher Name</label><span> * </span>
+              <ng-select [items]="publisher.items"
+                   bindLabel="name"
+                   placeholder="Select Publisher"
+                   bindValue="id" 
+                   formControlName="publisherId">
+              </ng-select>
+              
+            </div>
+            
+           
+            <div class="form-group">
+              <label>Publish date</label><span> * </span>
+              <input
+                #datepicker="ngbDatepicker"
+                class="form-control"
+                name="datepicker"
+                formControlName="publishDate"
+                ngbDatepicker
+                (click)="datepicker.toggle()"
+              />
+            </div>
+          </form>
+     </ng-template>
+    
+    <ng-template #abpFooter>
+      <button type="button" class="btn btn-secondary" abpClose>
+        {{ '::Close' | abpLocalization }}
+      </button>
+      <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
+        <i class="fa fa-check mr-1"></i>
+        {{ '::Save' | abpLocalization }}
+      </button>
+    </ng-template>
+  </abp-modal>
